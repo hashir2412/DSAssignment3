@@ -17,13 +17,16 @@ public class Node {
       ServerSocket serverSocket = new ServerSocket(port_number);
       Socket tc = serverSocket.accept();
       BufferedReader in = new BufferedReader(new InputStreamReader(tc.getInputStream()));
-      PrintWriter out = new PrintWriter(tc.getOutputStream());
+      PrintWriter out = new PrintWriter(tc.getOutputStream(),true);
       while (!tc.isClosed()) {
         String message = in.readLine();
+        System.out.println(message);
          if(message.equals("prepare")){
             out.println("yes");
-            System.out.println("in prepare");
          }else if(message.contains("commit")){
+          System.out.println("in commit");
+         }
+         if(in.ready()){
           System.out.println(in.readLine());
          }
       }
