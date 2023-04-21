@@ -24,7 +24,7 @@ public class Node {
          if(message.equals("prepare")){
             out.println("yes");
          }else if(message.contains("commit")){
-          System.out.println("in commit");
+          out.println(message+"Successfully commited");
          }
          if(in.ready()){
           System.out.println(in.readLine());
