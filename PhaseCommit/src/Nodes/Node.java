@@ -10,12 +10,13 @@ import java.net.Socket;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Node {
 
-  static Lock lock = new ReentrantLock();
+  static Semaphore sem = new Semaphore(1);
   static Instant getReceived;
   static String state = "idle";
 
@@ -56,6 +57,7 @@ public class Node {
             long elap = Duration.between(getReceived, Instant.now()).toMillis();
             if(elap >= 3000){
               out.println("no");
+              sem.release();
             }
              else {
               out.println("yes");
@@ -82,12 +84,13 @@ public class Node {
   }
 
   public static void initiateTrnx() {
-    lock.lock();
     try {
+      sem.acquire();
       System.out.println("Lock acquired");
       Thread.sleep(3000);
-    } catch (Exception e) {
-      // TODO: handle exception
+    } catch (InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 }
