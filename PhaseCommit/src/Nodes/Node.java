@@ -11,8 +11,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Node {
 
@@ -21,7 +19,6 @@ public class Node {
   static String state = "idle";
 
   public static void main(String[] args) {
-    
     System.out.println("Enter port number: ");
     Scanner sc = new Scanner(System.in);
     int port_number = sc.nextInt();
@@ -45,32 +42,51 @@ public class Node {
           }
         }
       );
+      String failureCase = in.readLine();
+
       while (!tc.isClosed()) {
         String message = in.readLine();
         switch (message) {
           case "get()":
-            getReceived = Instant.now();
+            if (failureCase.equals("1")) {
+              getReceived = Instant.now();
+            }
             t.start();
             System.out.println("in get()");
             break;
           case "prepare":
-            long elap = Duration.between(getReceived, Instant.now()).toMillis();
-            if(elap >= 3000){
-              out.println("no");
-              sem.release();
-            }
-             else {
+            if (failureCase.equals("1")) {
+              long elap = Duration
+                .between(getReceived, Instant.now())
+                .toMillis();
+              if (elap >= 3000) {
+                System.out.println("Sending no because of prepare not coming in time.");
+                writer.write("Failure 1. Too much time taken for prepare message.");
+                out.println("no");
+                sem.release();
+              } else {
+                out.println("yes");
+                state = "prepared";
+              }
+            } else if (failureCase.equals("2")) {
+              Thread.sleep(4000);
               out.println("yes");
-              state = "prepared";
+            }else if(failureCase.equals("4")){
+              Thread.sleep(4000);
+              out.println("yes");
+            }else{
+              out.println("yes"); // Case 4
             }
-            System.out.println(
-              "Node " + port_number + " in " + state + " state."
-            );
+            writer.append("\n Prepare for "+port_number);
             break;
           case "commit":
-            writer.write("blablas");
+            writer.write("Acknowledgement sent to TC");
             out.println("Acknowledged " + port_number);
-          default:
+            break;
+          case "Abort":
+            sem.release();
+            writer.write("\n Transaction aborted");
+            System.out.println("Transaction aborted.");
             break;
         }
       }

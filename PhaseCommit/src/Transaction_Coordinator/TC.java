@@ -10,8 +10,11 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class TC {
   static Socket n1;
+  static Socket n2;
   static PrintWriter out;
   static BufferedReader in;
+  static PrintWriter out2;
+  static BufferedReader in2;
   public static void main(String[] args) {
     try {
       Communicate obj = new Communicate();
@@ -23,11 +26,15 @@ public class TC {
       reg.bind("batman", stub);
       System.out.println("Server ready");
       n1 = new Socket("localhost", 1000);
-      out = new PrintWriter(TC.n1.getOutputStream(), true);
+      out = new PrintWriter(n1.getOutputStream(), true);
       in = new BufferedReader(
         new InputStreamReader(n1.getInputStream())
       );
-    //   Socket n2 = new Socket("localhost",1001);
+      n2 = new Socket("localhost",1001);
+      out2 = new PrintWriter(n2.getOutputStream(), true);
+      in2 = new BufferedReader(
+        new InputStreamReader(n2.getInputStream())
+      );
     } catch (Exception e) {
       System.err.println("Server exception: " + e.toString());
       e.printStackTrace();
