@@ -72,8 +72,9 @@ public class Node {
               Thread.sleep(4000);
               out.println("yes");
             }else if(failureCase.equals("4")){
-              Thread.sleep(4000);
+              writer.write("Sending yes to TC "+port_number);
               out.println("yes");
+              Thread.sleep(4000);
             }else{
               out.println("yes"); // Case 4
             }
