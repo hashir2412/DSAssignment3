@@ -66,7 +66,7 @@ public class Communicate implements ICommunicate {
           TC.out2.println("get()");
           TC.out2.println("prepare");
           myWriter3.write("Prepare sent to " + TC.n1.getPort());
-          myWriter3.write("Prepare sent to " + TC.n2.getPort());
+          myWriter3.write("\nPrepare sent to " + TC.n2.getPort());
           String resNode1 = TC.in.readLine();
           String resNode2 = TC.in2.readLine();
           if (resNode1.equals("yes")) {
