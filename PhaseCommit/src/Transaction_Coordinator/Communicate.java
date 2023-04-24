@@ -85,6 +85,7 @@ public class Communicate implements ICommunicate {
             // Timeout after sending one commit
             Thread.sleep(4000);
             if (resNode2.equals("yes")) {
+              myWriter3.write("\nCommit added for " + TC.n2.getPort());
               TC.out2.println("commit");
               resNode2 = TC.in2.readLine();
               if (resNode2.contains("Acknowledged")) {
@@ -93,7 +94,6 @@ public class Communicate implements ICommunicate {
               } else {
                 System.out.println("No acknowledgement from 1001");
               }
-              myWriter3.write("Commit added for " + TC.n2.getPort());
               myWriter3.close();
             }
             // Send the commits again which werent sent earlier
